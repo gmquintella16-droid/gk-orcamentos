@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GK Fotografia e Filmes - Orçamento Oficial</title>
+    <title>GK Fotografia e Filmes - Gestão V10</title>
     <style>
         :root { --primary: #111; --accent: #b8860b; --success: #1b5e20; --whatsapp: #25d366; --bg: #eceff1; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg); padding: 15px; color: #222; }
-        .container { max-width: 600px; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); margin: auto; }
-        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 20px; }
-        .header h1 { margin: 0; font-size: 22px; color: var(--primary); letter-spacing: 1px; }
-        .section-title { font-size: 12px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin: 20px 0 10px; border-left: 3px solid var(--accent); padding-left: 8px; }
-        .card-config { background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .container { max-width: 600px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); margin: auto; }
+        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px; }
+        .header h1 { margin: 0; font-size: 20px; color: var(--primary); }
+        .section-title { font-size: 11px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin: 15px 0 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
+        .card-config { background: #f9f9f9; border: 1px solid #eee; padding: 12px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .full { grid-column: span 2; }
-        label { display: block; font-size: 11px; font-weight: 700; color: #555; margin-bottom: 4px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
-        .btn { width: 100%; padding: 14px; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 15px; display: block; text-align: center; text-decoration: none; }
+        label { display: block; font-size: 10px; font-weight: 700; color: #555; margin-bottom: 3px; }
+        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        .btn { width: 100%; padding: 12px; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; display: block; text-align: center; text-decoration: none; }
         .btn-calc { background-color: var(--primary); }
-        .btn-wa { background-color: var(--whatsapp); display: none; margin-top: 20px; }
-        .resumo-box { margin-top: 25px; border: 1px solid #ddd; border-radius: 8px; display: none; background: #fff; }
-        .resumo-header { background: #f4f4f4; padding: 12px; font-weight: bold; text-align: center; border-bottom: 1px solid #ddd; }
-        .resumo-body { padding: 15px; }
-        .item-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
-        .financeiro { margin-top: 15px; background: #f0f4f0; padding: 12px; border-radius: 6px; border-left: 4px solid var(--success); }
-        .total-destaque { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 12px; color: var(--primary); }
-        .tabela-precos { background: #fffde7; padding: 10px; border-radius: 5px; font-size: 11px; margin-top: 10px; border: 1px solid #ffe082; }
+        .btn-wa { background-color: var(--whatsapp); display: none; margin-top: 15px; }
+        .btn-edit { background: none; border: 1px solid #ccc; color: #666; font-size: 10px; padding: 4px; margin-top: 5px; width: auto; }
+        
+        .tabela-v { background: #fffde7; padding: 10px; border-radius: 5px; font-size: 12px; border: 1px solid #ffe082; line-height: 1.6; }
+        .edit-tabela { display: none; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 8px; }
+        
+        .resumo-box { margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; display: none; background: #fff; }
+        .resumo-header { background: #f4f4f4; padding: 10px; font-weight: bold; text-align: center; border-bottom: 1px solid #ddd; }
+        .resumo-body { padding: 12px; }
+        .item-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #eee; font-size: 12px; }
+        .total-destaque { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 10px; color: var(--primary); }
+        .financeiro { margin-top: 12px; background: #f0f4f0; padding: 10px; border-radius: 6px; border-left: 4px solid var(--success); }
     </style>
 </head>
 <body>
@@ -33,47 +37,54 @@
 <div class="container">
     <div class="header">
         <h1>GK FOTOGRAFIA E FILMES</h1>
-        <p>Proposta com Tabela Progressiva</p>
     </div>
 
-    <div class="section-title">Configurações Base</div>
+    <div class="section-title">Valores Base</div>
     <div class="card-config">
         <div><label>Valor Hora (R$):</label><input type="number" id="baseHora" value="100"></div>
         <div><label>Valor Vídeo (R$):</label><input type="number" id="baseVideo" value="50"></div>
+        <div class="full"><label>Valor KM (R$):</label><input type="number" id="baseKm" value="1.50"></div>
+        
         <div class="full">
-            <div class="tabela-precos">
-                <strong>TABELA DE FOTOS:</strong><br>
-                0 a 10 fotos: <strong>R$ 12,00/un</strong> | 11 a 20 fotos: <strong>R$ 8,00/un</strong><br>
-                21 a 40 fotos: <strong>R$ 6,00/un</strong> | + de 40 fotos: <strong>R$ 4,00/un</strong>
+            <div class="tabela-v" id="viewTabela">
+                📍 0-10 fotos: R$ <span id="v1">12</span>/un<br>
+                📍 11-20 fotos: R$ <span id="v2">8</span>/un<br>
+                📍 21-40 fotos: R$ <span id="v3">6</span>/un<br>
+                📍 + de 40 fotos: R$ <span id="v4">4</span>/un
+            </div>
+            <button class="btn-edit" onclick="toggleEdit()">✏️ Alterar Valores da Tabela</button>
+            <div class="edit-tabela" id="editCampos">
+                <input type="number" id="f1" value="12"> <input type="number" id="f2" value="8">
+                <input type="number" id="f3" value="6"> <input type="number" id="f4" value="4">
             </div>
         </div>
     </div>
 
-    <div class="section-title">Dados do Trabalho</div>
+    <div class="section-title">Dados da Proposta</div>
     <div class="grid-inputs">
-        <div class="full"><label>Nome do Cliente/Projeto:</label><input type="text" id="cliente" placeholder="Ex: Batizado - Família Silva"></div>
-        <div><label>Horas de Evento:</label><input type="number" id="horas" value="1"></div>
-        <div><label>Qtd de Fotos:</label><input type="number" id="fotos" value="10"></div>
-        <div><label>Qtd de Vídeos:</label><input type="number" id="videos" value="0"></div>
-        <div><label>Distância (KM):</label><input type="number" id="km" value="0"></div>
-        <div class="full"><label>Custos Extras (Estúdio, etc):</label><input type="number" id="custos" value="0"></div>
+        <div class="full"><label>Nome do Cliente:</label><input type="text" id="cliente" placeholder="Ex: Batizado"></div>
+        <div><label>Horas:</label><input type="number" id="horas" value="1"></div>
+        <div><label>Qtd Fotos:</label><input type="number" id="fotos" value="10"></div>
+        <div><label>Qtd Vídeos:</label><input type="number" id="videos" value="0"></div>
+        <div><label>KM Distância:</label><input type="number" id="km" value="0"></div>
+        <div><label>Custos Extras (R$):</label><input type="number" id="custos" value="0"></div>
     </div>
 
-    <button class="btn btn-calc" onclick="calcular()">Calcular Proposta Final</button>
+    <button class="btn btn-calc" onclick="calcular()">Calcular Agora</button>
 
     <div class="resumo-box" id="resultado">
-        <div class="resumo-header">ORÇAMENTO GK FOTOGRAFIA E FILMES</div>
+        <div class="resumo-header">ORÇAMENTO GERADO</div>
         <div class="resumo-body">
             <div class="total-destaque" id="outTotal">R$ 0,00</div>
             <div id="detalhes"></div>
             
             <div class="financeiro">
-                <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:#c0392b;"></span></div>
+                <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:red"></span></div>
                 <div class="item-row"><span>Caixa Empresa (40%):</span><span id="outCaixa"></span></div>
-                <div class="item-row" style="border:none;"><strong>SALÁRIO LÍQUIDO (50%):</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
+                <div class="item-row" style="border:none;"><strong>SALÁRIO LÍQUIDO:</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
             </div>
 
-            <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar Proposta para o Cliente</button>
+            <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
         </div>
     </div>
 </div>
@@ -81,10 +92,25 @@
 <script>
     let dados = {};
 
+    function toggleEdit() {
+        const e = document.getElementById('editCampos');
+        e.style.display = e.style.display === 'grid' ? 'none' : 'grid';
+    }
+
     function calcular() {
+        // Pega valores da tabela editável
+        const p1 = parseFloat(document.getElementById('f1').value);
+        const p2 = parseFloat(document.getElementById('f2').value);
+        const p3 = parseFloat(document.getElementById('f3').value);
+        const p4 = parseFloat(document.getElementById('f4').value);
+        
+        // Atualiza visual da tabela
+        document.getElementById('v1').innerText = p1; document.getElementById('v2').innerText = p2;
+        document.getElementById('v3').innerText = p3; document.getElementById('v4').innerText = p4;
+
         const ph = parseFloat(document.getElementById('baseHora').value) || 0;
         const pv = parseFloat(document.getElementById('baseVideo').value) || 0;
-        const pk = 1.50; // Seu valor padrão por KM
+        const pkm = parseFloat(document.getElementById('baseKm').value) || 0;
 
         const cli = document.getElementById('cliente').value || "Cliente";
         const h = parseFloat(document.getElementById('horas').value) || 0;
@@ -93,29 +119,26 @@
         const k = parseFloat(document.getElementById('km').value) || 0;
         const c = parseFloat(document.getElementById('custos').value) || 0;
 
-        // Lógica de Condição (Tabela Progressiva) solicitada
-        let precoFotoUnitario = 0;
-        if (f <= 10) precoFotoUnitario = 12;
-        else if (f <= 20) precoFotoUnitario = 8;
-        else if (f <= 40) precoFotoUnitario = 6;
-        else precoFotoUnitario = 4;
+        let precoUn = 0;
+        if (f <= 10) precoUn = p1;
+        else if (f <= 20) precoUn = p2;
+        else if (f <= 40) precoUn = p3;
+        else precoUn = p4;
 
-        const totalFotos = f * precoFotoUnitario;
-        const totalFrete = k * pk;
-        const totalTrabalho = (h * ph) + totalFotos + (v * pv) + c;
-        const totalGeral = totalTrabalho + totalFrete;
+        const totalFotos = f * precoUn;
+        const totalLogistica = (k * pkm) + c; // KM + Extras juntos
+        const totalGeral = (h * ph) + totalFotos + (v * pv) + totalLogistica;
         
-        dados = { cli, h, f, v, k, totalGeral, totalFrete, c, precoFotoUnitario, totalFotos };
+        dados = { cli, h, f, v, totalGeral, totalLogistica, precoUn, totalFotos };
 
         document.getElementById('resultado').style.display = 'block';
         document.getElementById('btnWa').style.display = 'block';
         document.getElementById('outTotal').innerText = totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         
         let lista = `<div class="item-row"><span>Mão de obra (${h}h)</span><span>R$ ${(h*ph).toFixed(2)}</span></div>`;
-        lista += `<div class="item-row"><span>Fotos (${f} un x R$ ${precoFotoUnitario})</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
-        if(v > 0) lista += `<div class="item-row"><span>Clipe de Vídeo (${v}un)</span><span>R$ ${(v*pv).toFixed(2)}</span></div>`;
-        if(c > 0) lista += `<div class="item-row"><span>Custos Extras (Estúdio/Acessórios)</span><span>R$ ${c.toFixed(2)}</span></div>`;
-        if(k > 0) lista += `<div class="item-row"><span>Deslocamento/Frete (${k}km)</span><span>R$ ${totalFrete.toFixed(2)}</span></div>`;
+        lista += `<div class="item-row"><span>Fotos (${f} un x R$ ${precoUn})</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
+        if(v > 0) lista += `<div class="item-row"><span>Vídeo (${v}un)</span><span>R$ ${(v*pv).toFixed(2)}</span></div>`;
+        if(totalLogistica > 0) lista += `<div class="item-row"><span>Logística (KM+Extras)</span><span>R$ ${totalLogistica.toFixed(2)}</span></div>`;
         
         document.getElementById('detalhes').innerHTML = lista;
         document.getElementById('outDizimo').innerText = (totalGeral * 0.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -125,28 +148,26 @@
 
     function enviarWhatsApp() {
         const totalFmt = dados.totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const trabalhoFmt = (dados.totalGeral - dados.totalFrete).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const logFmt = dados.totalLogistica.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         
-        let msg = `Olá! ✨ Preparamos a proposta personalizada para o seu projeto: *${dados.cli}*.\n\n`;
+        let msg = `Olá! ✨ Preparamos a proposta para: *${dados.cli}*.\n\n`;
         msg += `📸 *O que está incluso:*\n`;
-        msg += `* Cobertura: ${dados.h}h de evento.\n`;
-        msg += `* Fotos: ${dados.f} fotos selecionadas e tratadas (Alta Resolução).\n`;
-        if(dados.v > 0) msg += `* Vídeo: ${dados.v} Clipe curto (estilo Reels/Stories).\n`;
-        msg += `* Entrega: Galeria digital para download.\n\n`;
+        msg += `* Cobertura técnica de ${dados.h}h.\n`;
+        msg += `* Entrega de ${dados.f} fotos tratadas.\n`;
+        if(dados.v > 0) msg += `* ${dados.v} Clipe de Vídeo (Reels/Stories).\n`;
+        msg += `* Galeria digital para download.\n\n`;
         
         msg += `💰 *Investimento:*\n`;
-        msg += `* Pacote de Trabalho: ${trabalhoFmt}\n`;
-        if(dados.c > 0) msg += `* Extras (Estúdio/Acessórios): R$ ${dados.c.toFixed(2)}\n`;
-        if(dados.k > 0) msg += `* 🚚 Deslocamento (Frete): R$ ${dados.totalFrete.toFixed(2)}\n`;
+        msg += `* Trabalho Fotográfico: ${(dados.totalGeral - dados.totalLogistica).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n`;
+        if(dados.totalLogistica > 0) msg += `* 🚚 Deslocamento / Custos Logísticos: ${logFmt}\n`;
         msg += `* *TOTAL FINAL: ${totalFmt}*\n\n`;
         
-        msg += `*Pagamento:* Via Pix ou parcelado no cartão (taxas por conta do cliente).\n\n`;
-        msg += `Vamos eternizar esses momentos? ✨\n\n`;
+        msg += `*Pagamento:* Pix ou cartão (taxas por conta do cliente).\n\n`;
+        msg += `Vamos fechar essa data? ✨\n\n`;
         msg += `*GK Fotografia e Filmes*`;
 
         window.open("https://wa.me/?text=" + encodeURIComponent(msg), '_blank');
     }
 </script>
-
 </body>
 </html>
