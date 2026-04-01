@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GK Fotografia e Filmes - Gestão V11</title>
+    <title>GK Fotografia e Filmes - Gestão V12</title>
     <style>
         :root { --primary: #111; --accent: #b8860b; --success: #1b5e20; --whatsapp: #25d366; --bg: #f4f7f6; }
         
-        /* Ajuste para evitar que a tela 'dance' */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { overflow-x: hidden; width: 100%; position: relative; }
+        html, body { overflow-x: hidden; width: 100%; }
 
         body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background-color: var(--bg); padding: 10px; color: #222; margin: 0; }
         
@@ -26,21 +25,19 @@
         .full { grid-column: span 2; }
 
         label { display: block; font-size: 10px; font-weight: 700; color: #666; margin-bottom: 2px; }
-        
-        /* Font-size 16px evita o zoom automático no iPhone */
         input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; background: #fff; }
 
-        .btn { width: 100%; padding: 12px; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .btn { width: 100%; padding: 12px; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; }
         .btn-calc { background-color: var(--primary); }
         .btn-wa { background-color: var(--whatsapp); display: none; margin-top: 15px; }
         
         .btn-edit { background: #eee; border: none; color: #555; font-size: 10px; padding: 5px 10px; border-radius: 4px; margin-top: 5px; font-weight: bold; }
         
-        .tabela-v { background: #fffdf0; padding: 8px; border-radius: 6px; font-size: 11px; border: 1px solid #ffe082; line-height: 1.4; }
-        .edit-tabela { display: none; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 8px; }
-        .edit-tabela input { padding: 5px; font-size: 12px; text-align: center; }
+        /* Tabela na Vertical como solicitado */
+        .tabela-v { background: #fffdf0; padding: 10px; border-radius: 6px; font-size: 12px; border: 1px solid #ffe082; line-height: 1.6; }
+        .edit-tabela { display: none; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+        .edit-tabela input { padding: 6px; font-size: 14px; text-align: center; }
 
-        /* Animação suave para o resultado não dar tranco */
         .resumo-box { 
             margin-top: 15px; border: 1px solid #ddd; border-radius: 8px; display: none; background: #fff;
             animation: fadeIn 0.4s ease-in-out;
@@ -52,7 +49,6 @@
         .item-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #eee; font-size: 11px; }
         
         .total-destaque { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 8px; color: var(--primary); }
-        
         .financeiro { margin-top: 10px; background: #f1f8f1; padding: 10px; border-radius: 8px; border-left: 4px solid var(--success); }
     </style>
 </head>
@@ -71,14 +67,17 @@
         
         <div class="full">
             <div class="tabela-v" id="viewTabela">
-                <strong>TABELA DE FOTOS:</strong><br>
-                • 0-10: R$ <span id="v1">12</span> | • 11-20: R$ <span id="v2">8</span><br>
-                • 21-40: R$ <span id="v3">6</span> | • + de 40: R$ <span id="v4">4</span>
+                📍 0-10 fotos: R$ <span id="v1">12</span>/un<br>
+                📍 11-20 fotos: R$ <span id="v2">8</span>/un<br>
+                📍 21-40 fotos: R$ <span id="v3">6</span>/un<br>
+                📍 + de 40 fotos: R$ <span id="v4">4</span>/un
             </div>
             <button class="btn-edit" onclick="toggleEdit()">✏️ Editar Tabela</button>
             <div class="edit-tabela" id="editCampos">
-                <input type="number" id="f1" value="12"> <input type="number" id="f2" value="8">
-                <input type="number" id="f3" value="6"> <input type="number" id="f4" value="4">
+                <div><label>0-10:</label><input type="number" id="f1" value="12"></div>
+                <div><label>11-20:</label><input type="number" id="f2" value="8"></div>
+                <div><label>21-40:</label><input type="number" id="f3" value="6"></div>
+                <div><label>+40:</label><input type="number" id="f4" value="4"></div>
             </div>
         </div>
     </div>
@@ -167,7 +166,6 @@
         document.getElementById('outCaixa').innerText = (totalGeral * 0.4).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         document.getElementById('outSalario').innerText = (totalGeral * 0.5).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-        // Faz o scroll suave até o resultado
         resBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
