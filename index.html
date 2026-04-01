@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GK Fotografia e Filmes - Gestão V13</title>
+    <title>GK Fotografia e Filmes - Gestão V14</title>
     <style>
         :root { --primary: #111; --accent: #b8860b; --success: #1b5e20; --whatsapp: #25d366; --bg: #f4f7f6; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -75,15 +75,15 @@
     <button class="btn btn-calc" onclick="calcular()">Calcular Proposta</button>
 
     <div class="resumo-box" id="resultado">
-        <div class="resumo-header">RESUMO DO ORÇAMENTO</div>
+        <div class="resumo-header">RESUMO FINANCEIRO</div>
         <div class="resumo-body">
             <div class="total-destaque" id="outTotal">R$ 0,00</div>
             <div id="detalhes"></div>
             
             <div class="financeiro">
                 <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:#d32f2f"></span></div>
-                <div class="item-row"><span>Caixa Empresa (40%):</span><span id="outCaixa"></span></div>
-                <div class="item-row" style="border:none; margin-top:5px; font-size:13px;"><strong>SALÁRIO:</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
+                <div class="item-row"><span>Empresa/Reinvestir (60%):</span><span id="outCaixa"></span></div>
+                <div class="item-row" style="border:none; margin-top:5px; font-size:13px;"><strong>PRÓ-LABORE (30%):</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
             </div>
 
             <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
@@ -126,7 +126,7 @@
         else precoUn = p4;
 
         const totalFotos = f * precoUn;
-        const totalLogistica = (k * pkm) + c; // KM + EXTRAS SOMADOS
+        const totalLogistica = (k * pkm) + c;
         const totalGeral = (h * ph) + totalFotos + (v * pv) + totalLogistica;
         
         dados = { cli, h, f, v, totalGeral, totalLogistica, precoUn, totalFotos };
@@ -139,16 +139,14 @@
         let lista = `<div class="item-row"><span>Mão de obra (${h}h)</span><span>R$ ${(h*ph).toFixed(2)}</span></div>`;
         lista += `<div class="item-row"><span>Fotos (${f}un x R$ ${precoUn})</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
         if(v > 0) lista += `<div class="item-row"><span>Vídeo (${v}un)</span><span>R$ ${(v*pv).toFixed(2)}</span></div>`;
-        
-        // MOSTRA FRETE + CUSTOS JUNTOS NO RESUMO
-        if(totalLogistica > 0) {
-            lista += `<div class="item-row" style="background:#fff9c4; font-weight:bold;"><span>🚚 Frete + Custos:</span><span>R$ ${totalLogistica.toFixed(2)}</span></div>`;
-        }
+        if(totalLogistica > 0) lista += `<div class="item-row" style="background:#fff9c4; font-weight:bold;"><span>🚚 Frete + Custos:</span><span>R$ ${totalLogistica.toFixed(2)}</span></div>`;
         
         document.getElementById('detalhes').innerHTML = lista;
+        
+        // NOVA LÓGICA FINANCEIRA
         document.getElementById('outDizimo').innerText = (totalGeral * 0.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        document.getElementById('outCaixa').innerText = (totalGeral * 0.4).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        document.getElementById('outSalario').innerText = (totalGeral * 0.5).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outCaixa').innerText = (totalGeral * 0.6).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outSalario').innerText = (totalGeral * 0.3).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
         resBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
