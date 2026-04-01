@@ -17,7 +17,7 @@
         .full { grid-column: span 2; }
         label { display: block; font-size: 11px; font-weight: 700; color: #555; margin-bottom: 4px; }
         input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
-        .btn { width: 100%; padding: 14px; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 15px; display: block; text-align: center; text-decoration: none; transition: 0.2s; }
+        .btn { width: 100%; padding: 14px; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 15px; display: block; text-align: center; text-decoration: none; }
         .btn-calc { background-color: var(--primary); }
         .btn-wa { background-color: var(--whatsapp); display: none; margin-top: 20px; }
         .resumo-box { margin-top: 25px; border: 1px solid #ddd; border-radius: 8px; display: none; background: #fff; }
@@ -26,6 +26,7 @@
         .item-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
         .financeiro { margin-top: 15px; background: #f0f4f0; padding: 12px; border-radius: 6px; border-left: 4px solid var(--success); }
         .total-destaque { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 12px; color: var(--primary); }
+        .info-preco { font-size: 10px; color: #888; font-style: italic; }
     </style>
 </head>
 <body>
@@ -33,28 +34,30 @@
 <div class="container">
     <div class="header">
         <h1>GK FOTOGRAFIA E FILMES</h1>
-        <p>Eternizando Momentos</p>
+        <p>Tabela Progressiva Inteligente</p>
     </div>
 
-    <div class="section-title">Valores Base de Cálculo</div>
+    <div class="section-title">Valores Base</div>
     <div class="card-config">
         <div><label>Hora Trabalho (R$):</label><input type="number" id="baseHora" value="100"></div>
-        <div><label>Cada Foto (R$):</label><input type="number" id="baseFoto" value="8"></div>
         <div><label>Cada Vídeo (R$):</label><input type="number" id="baseVideo" value="50"></div>
-        <div><label>Valor KM (R$):</label><input type="number" id="baseKm" value="1.50"></div>
+        <div class="full">
+            <label>Preço da Foto (Automático por faixa)</label>
+            <span class="info-preco">1-10: R$12 | 11-20: R$8 | 21-40: R$6 | +40: R$4</span>
+        </div>
     </div>
 
     <div class="section-title">Dados da Proposta</div>
     <div class="grid-inputs">
-        <div class="full"><label>Nome do Cliente/Evento:</label><input type="text" id="cliente" placeholder="Ex: Batizado do Benício"></div>
-        <div><label>Horas de Cobertura:</label><input type="number" id="horas" value="3"></div>
-        <div><label>Qtd de Fotos:</label><input type="number" id="fotos" value="50"></div>
-        <div><label>Qtd de Vídeos:</label><input type="number" id="videos" value="1"></div>
+        <div class="full"><label>Nome do Cliente/Evento:</label><input type="text" id="cliente" placeholder="Ex: Maria - Batizado"></div>
+        <div><label>Horas:</label><input type="number" id="horas" value="1"></div>
+        <div><label>Qtd de Fotos:</label><input type="number" id="fotos" value="10" oninput="mostrarPrecoSugerido()"></div>
+        <div><label>Qtd de Vídeos:</label><input type="number" id="videos" value="0"></div>
         <div><label>Distância (KM):</label><input type="number" id="km" value="0"></div>
         <div class="full"><label>Custos Extras (R$):</label><input type="number" id="custos" value="0"></div>
     </div>
 
-    <button class="btn btn-calc" onclick="calcular()">Gerar Proposta Profissional</button>
+    <button class="btn btn-calc" onclick="calcular()">Gerar Orçamento Inteligente</button>
 
     <div class="resumo-box" id="resultado">
         <div class="resumo-header">CONTROLE INTERNO - GK</div>
@@ -64,10 +67,7 @@
             <div class="financeiro">
                 <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:#c0392b;"></span></div>
                 <div class="item-row"><span>Caixa Empresa (40%):</span><span id="outCaixa"></span></div>
-                <div class="item-row" style="border:none; margin-top:5px;">
-                    <strong style="color: var(--success);">SALÁRIO LÍQUIDO:</strong>
-                    <strong id="outSalario" style="color: var(--success);"></strong>
-                </div>
+                <div class="item-row" style="border:none;"><strong>SALÁRIO:</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
             </div>
             <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar Proposta via WhatsApp</button>
         </div>
@@ -79,9 +79,8 @@
 
     function calcular() {
         const ph = parseFloat(document.getElementById('baseHora').value) || 0;
-        const pf = parseFloat(document.getElementById('baseFoto').value) || 0;
         const pv = parseFloat(document.getElementById('baseVideo').value) || 0;
-        const pk = parseFloat(document.getElementById('baseKm').value) || 0;
+        const pk = 1.50; // Valor fixo do KM conforme você usa
 
         const cli = document.getElementById('cliente').value || "Cliente";
         const h = parseFloat(document.getElementById('horas').value) || 0;
@@ -90,19 +89,25 @@
         const k = parseFloat(document.getElementById('km').value) || 0;
         const c = parseFloat(document.getElementById('custos').value) || 0;
 
-        const total = (h * ph) + (f * pf) + (v * pv) + (k * pk) + c;
-        dados = { cli, h, f, v, k, total };
+        // Lógica da Condição (Tabela Progressiva)
+        let precoFotoUnitario = 0;
+        if (f <= 10) { precoFotoUnitario = 12; }
+        else if (f <= 20) { precoFotoUnitario = 8; }
+        else if (f <= 40) { precoFotoUnitario = 6; }
+        else { precoFotoUnitario = 4; }
+
+        const totalFotos = f * precoFotoUnitario;
+        const total = (h * ph) + totalFotos + (v * pv) + (k * pk) + c;
+        
+        dados = { cli, h, f, v, k, total, precoFotoUnitario };
 
         document.getElementById('resultado').style.display = 'block';
         document.getElementById('btnWa').style.display = 'block';
         document.getElementById('outTotal').innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         
-        let lista = "";
-        if(h > 0) lista += `<div class="item-row"><span>Cobertura (${h}h)</span><span>R$ ${(h*ph).toFixed(2)}</span></div>`;
-        if(f > 0) lista += `<div class="item-row"><span>Fotos (${f}un)</span><span>R$ ${(f*pf).toFixed(2)}</span></div>`;
+        let lista = `<div class="item-row"><span>Cobertura (${h}h)</span><span>R$ ${(h*ph).toFixed(2)}</span></div>`;
+        lista += `<div class="item-row"><span>Fotos (${f} un x R$ ${precoFotoUnitario})</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
         if(v > 0) lista += `<div class="item-row"><span>Vídeos (${v}un)</span><span>R$ ${(v*pv).toFixed(2)}</span></div>`;
-        if(k > 0) lista += `<div class="item-row"><span>Deslocamento (${k}km)</span><span>R$ ${(k*pk).toFixed(2)}</span></div>`;
-        if(c > 0) lista += `<div class="item-row"><span>Extras</span><span>R$ ${c.toFixed(2)}</span></div>`;
         
         document.getElementById('detalhes').innerHTML = lista;
         document.getElementById('outDizimo').innerText = (total * 0.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -112,19 +117,17 @@
 
     function enviarWhatsApp() {
         const totalFmt = dados.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const kmTexto = dados.k > 0 ? `* Valor de deslocamento incluso (${dados.k}km).` : `* Valor de deslocamento a calcular conforme a quilometragem.`;
         
-        let msg = `Olá! ✨ Conversamos sobre a sua necessidade para o *${dados.cli}* e, para que você não fique sem esse registro tão especial, preparamos uma proposta exclusiva com um investimento mais acessível, focando nos momentos principais.\n\n`;
-        msg += `📸 *Pacote Essencial: Fotografia + Vídeo*\n`;
+        let msg = `Olá! ✨ Preparamos uma proposta exclusiva para o seu projeto: *${dados.cli}*.\n\n`;
+        msg += `📸 *Pacote Personalizado*\n`;
         msg += `* Cobertura: ${dados.h}h de evento.\n`;
-        msg += `* Fotos: ${dados.f} fotos selecionadas e tratadas em alta resolução.\n`;
-        msg += `* Vídeo: ${dados.v} Clipe curto (estilo Reels/Stories) com os melhores momentos.\n`;
+        msg += `* Fotos: ${dados.f} fotos selecionadas e tratadas (Alta Resolução).\n`;
+        if(dados.v > 0) msg += `* Vídeo: ${dados.v} Clipe curto (estilo Reels/Stories).\n`;
         msg += `* Entrega: Galeria digital para download.\n\n`;
         msg += `*Investimento:*\n`;
         msg += `* ${totalFmt} (via Pix).\n`;
-        msg += `* Ou parcelado em até 12x no cartão (taxas por conta do cliente).\n`;
-        msg += `${kmTexto}\n\n`;
-        msg += `Dessa forma, garantimos as fotos mais importantes e um vídeo emocionante para você compartilhar com a família. O que acha dessa opção para fecharmos a data? ✨\n\n`;
+        msg += `* Ou parcelado no cartão (taxas por conta do cliente).\n\n`;
+        msg += `Dessa forma, garantimos os registros mais importantes com um olhar profissional. O que acha? ✨\n\n`;
         msg += `*GK Fotografia e Filmes*`;
 
         window.open("https://wa.me/?text=" + encodeURIComponent(msg), '_blank');
