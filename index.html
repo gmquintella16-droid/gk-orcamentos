@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GK Fotografia e Filmes - Proposta</title>
+    <title>GK Fotografia e Filmes - Proposta com Frete</title>
     <style>
         :root { --primary: #111; --accent: #b8860b; --success: #1b5e20; --whatsapp: #25d366; --bg: #eceff1; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg); padding: 15px; color: #222; }
@@ -26,7 +26,6 @@
         .item-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
         .financeiro { margin-top: 15px; background: #f0f4f0; padding: 12px; border-radius: 6px; border-left: 4px solid var(--success); }
         .total-destaque { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 12px; color: var(--primary); }
-        .info-preco { font-size: 10px; color: #888; font-style: italic; }
     </style>
 </head>
 <body>
@@ -34,42 +33,41 @@
 <div class="container">
     <div class="header">
         <h1>GK FOTOGRAFIA E FILMES</h1>
-        <p>Tabela Progressiva Inteligente</p>
+        <p>Orçamento com Frete Automático</p>
     </div>
 
     <div class="section-title">Valores Base</div>
     <div class="card-config">
         <div><label>Hora Trabalho (R$):</label><input type="number" id="baseHora" value="100"></div>
         <div><label>Cada Vídeo (R$):</label><input type="number" id="baseVideo" value="50"></div>
-        <div class="full">
-            <label>Preço da Foto (Automático por faixa)</label>
-            <span class="info-preco">1-10: R$12 | 11-20: R$8 | 21-40: R$6 | +40: R$4</span>
-        </div>
+        <div><label>Valor KM (R$):</label><input type="number" id="baseKm" value="1.50"></div>
     </div>
 
     <div class="section-title">Dados da Proposta</div>
     <div class="grid-inputs">
-        <div class="full"><label>Nome do Cliente/Evento:</label><input type="text" id="cliente" placeholder="Ex: Maria - Batizado"></div>
+        <div class="full"><label>Nome do Cliente/Projeto:</label><input type="text" id="cliente" placeholder="Ex: Batizado - Família Silva"></div>
         <div><label>Horas:</label><input type="number" id="horas" value="1"></div>
-        <div><label>Qtd de Fotos:</label><input type="number" id="fotos" value="10" oninput="mostrarPrecoSugerido()"></div>
+        <div><label>Qtd de Fotos:</label><input type="number" id="fotos" value="10"></div>
         <div><label>Qtd de Vídeos:</label><input type="number" id="videos" value="0"></div>
         <div><label>Distância (KM):</label><input type="number" id="km" value="0"></div>
-        <div class="full"><label>Custos Extras (R$):</label><input type="number" id="custos" value="0"></div>
+        <div class="full"><label>Custos Extras (Estúdio, etc):</label><input type="number" id="custos" value="0"></div>
     </div>
 
-    <button class="btn btn-calc" onclick="calcular()">Gerar Orçamento Inteligente</button>
+    <button class="btn btn-calc" onclick="calcular()">Calcular Proposta Final</button>
 
     <div class="resumo-box" id="resultado">
-        <div class="resumo-header">CONTROLE INTERNO - GK</div>
+        <div class="resumo-header">RESUMO INTERNO GK</div>
         <div class="resumo-body">
             <div class="total-destaque" id="outTotal">R$ 0,00</div>
             <div id="detalhes"></div>
+            
             <div class="financeiro">
                 <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:#c0392b;"></span></div>
                 <div class="item-row"><span>Caixa Empresa (40%):</span><span id="outCaixa"></span></div>
-                <div class="item-row" style="border:none;"><strong>SALÁRIO:</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
+                <div class="item-row" style="border:none;"><strong>SALÁRIO LÍQUIDO:</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
             </div>
-            <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar Proposta via WhatsApp</button>
+
+            <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar Proposta com Frete</button>
         </div>
     </div>
 </div>
@@ -80,7 +78,7 @@
     function calcular() {
         const ph = parseFloat(document.getElementById('baseHora').value) || 0;
         const pv = parseFloat(document.getElementById('baseVideo').value) || 0;
-        const pk = 1.50; // Valor fixo do KM conforme você usa
+        const pk = parseFloat(document.getElementById('baseKm').value) || 0;
 
         const cli = document.getElementById('cliente').value || "Cliente";
         const h = parseFloat(document.getElementById('horas').value) || 0;
@@ -89,45 +87,53 @@
         const k = parseFloat(document.getElementById('km').value) || 0;
         const c = parseFloat(document.getElementById('custos').value) || 0;
 
-        // Lógica da Condição (Tabela Progressiva)
+        // Tabela Progressiva das Fotos
         let precoFotoUnitario = 0;
-        if (f <= 10) { precoFotoUnitario = 12; }
-        else if (f <= 20) { precoFotoUnitario = 8; }
-        else if (f <= 40) { precoFotoUnitario = 6; }
-        else { precoFotoUnitario = 4; }
+        if (f <= 10) precoFotoUnitario = 12;
+        else if (f <= 20) precoFotoUnitario = 8;
+        else if (f <= 40) precoFotoUnitario = 6;
+        else precoFotoUnitario = 4;
 
         const totalFotos = f * precoFotoUnitario;
-        const total = (h * ph) + totalFotos + (v * pv) + (k * pk) + c;
+        const totalFrete = k * pk;
+        const totalTrabalho = (h * ph) + totalFotos + (v * pv) + c;
+        const totalGeral = totalTrabalho + totalFrete;
         
-        dados = { cli, h, f, v, k, total, precoFotoUnitario };
+        dados = { cli, h, f, v, k, totalGeral, totalFrete, precoFotoUnitario };
 
         document.getElementById('resultado').style.display = 'block';
         document.getElementById('btnWa').style.display = 'block';
-        document.getElementById('outTotal').innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outTotal').innerText = totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         
-        let lista = `<div class="item-row"><span>Cobertura (${h}h)</span><span>R$ ${(h*ph).toFixed(2)}</span></div>`;
-        lista += `<div class="item-row"><span>Fotos (${f} un x R$ ${precoFotoUnitario})</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
-        if(v > 0) lista += `<div class="item-row"><span>Vídeos (${v}un)</span><span>R$ ${(v*pv).toFixed(2)}</span></div>`;
+        let lista = `<div class="item-row"><span>Cobertura Técnica (${h}h)</span><span>R$ ${(h*ph).toFixed(2)}</span></div>`;
+        lista += `<div class="item-row"><span>Pacote Fotos (${f}un)</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
+        if(v > 0) lista += `<div class="item-row"><span>Clipe de Vídeo (${v}un)</span><span>R$ ${(v*pv).toFixed(2)}</span></div>`;
+        if(k > 0) lista += `<div class="item-row"><span>Frete/Deslocamento (${k}km)</span><span>R$ ${totalFrete.toFixed(2)}</span></div>`;
         
         document.getElementById('detalhes').innerHTML = lista;
-        document.getElementById('outDizimo').innerText = (total * 0.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        document.getElementById('outCaixa').innerText = (total * 0.4).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        document.getElementById('outSalario').innerText = (total * 0.5).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outDizimo').innerText = (totalGeral * 0.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outCaixa').innerText = (totalGeral * 0.4).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outSalario').innerText = (totalGeral * 0.5).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
     function enviarWhatsApp() {
-        const totalFmt = dados.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const totalFmt = dados.totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const freteFmt = dados.totalFrete.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         
-        let msg = `Olá! ✨ Preparamos uma proposta exclusiva para o seu projeto: *${dados.cli}*.\n\n`;
-        msg += `📸 *Pacote Personalizado*\n`;
+        let msg = `Olá! ✨ Preparamos a proposta personalizada para o seu projeto: *${dados.cli}*.\n\n`;
+        msg += `📸 *O que está incluso:*\n`;
         msg += `* Cobertura: ${dados.h}h de evento.\n`;
         msg += `* Fotos: ${dados.f} fotos selecionadas e tratadas (Alta Resolução).\n`;
         if(dados.v > 0) msg += `* Vídeo: ${dados.v} Clipe curto (estilo Reels/Stories).\n`;
         msg += `* Entrega: Galeria digital para download.\n\n`;
-        msg += `*Investimento:*\n`;
-        msg += `* ${totalFmt} (via Pix).\n`;
-        msg += `* Ou parcelado no cartão (taxas por conta do cliente).\n\n`;
-        msg += `Dessa forma, garantimos os registros mais importantes com um olhar profissional. O que acha? ✨\n\n`;
+        
+        msg += `💰 *Investimento:*\n`;
+        msg += `* Trabalho Fotográfico: ${(dados.totalGeral - dados.totalFrete).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n`;
+        if(dados.k > 0) msg += `* 🚚 Deslocamento (Frete): ${freteFmt}\n`;
+        msg += `* *Total Final: ${totalFmt}*\n\n`;
+        
+        msg += `*Pagamento:* Via Pix ou parcelado no cartão (taxas por conta do cliente).\n\n`;
+        msg += `Vamos eternizar esses momentos? ✨\n\n`;
         msg += `*GK Fotografia e Filmes*`;
 
         window.open("https://wa.me/?text=" + encodeURIComponent(msg), '_blank');
