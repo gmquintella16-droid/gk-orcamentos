@@ -2,34 +2,58 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GK Fotografia e Filmes - Gestão V10</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GK Fotografia e Filmes - Gestão V11</title>
     <style>
-        :root { --primary: #111; --accent: #b8860b; --success: #1b5e20; --whatsapp: #25d366; --bg: #eceff1; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg); padding: 15px; color: #222; }
-        .container { max-width: 600px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); margin: auto; }
-        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px; }
-        .header h1 { margin: 0; font-size: 20px; color: var(--primary); }
-        .section-title { font-size: 11px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin: 15px 0 8px; border-left: 3px solid var(--accent); padding-left: 8px; }
-        .card-config { background: #f9f9f9; border: 1px solid #eee; padding: 12px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        :root { --primary: #111; --accent: #b8860b; --success: #1b5e20; --whatsapp: #25d366; --bg: #f4f7f6; }
+        
+        /* Ajuste para evitar que a tela 'dance' */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { overflow-x: hidden; width: 100%; position: relative; }
+
+        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background-color: var(--bg); padding: 10px; color: #222; margin: 0; }
+        
+        .container { max-width: 450px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto; }
+        
+        .header { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 18px; color: var(--primary); letter-spacing: 1px; }
+
+        .section-title { font-size: 10px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin: 12px 0 6px; border-left: 3px solid var(--accent); padding-left: 6px; }
+        
+        .card-config { background: #fafafa; border: 1px solid #eee; padding: 10px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .full { grid-column: span 2; }
-        label { display: block; font-size: 10px; font-weight: 700; color: #555; margin-bottom: 3px; }
-        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
-        .btn { width: 100%; padding: 12px; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; display: block; text-align: center; text-decoration: none; }
+
+        label { display: block; font-size: 10px; font-weight: 700; color: #666; margin-bottom: 2px; }
+        
+        /* Font-size 16px evita o zoom automático no iPhone */
+        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; background: #fff; }
+
+        .btn { width: 100%; padding: 12px; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; transition: 0.3s; }
         .btn-calc { background-color: var(--primary); }
         .btn-wa { background-color: var(--whatsapp); display: none; margin-top: 15px; }
-        .btn-edit { background: none; border: 1px solid #ccc; color: #666; font-size: 10px; padding: 4px; margin-top: 5px; width: auto; }
         
-        .tabela-v { background: #fffde7; padding: 10px; border-radius: 5px; font-size: 12px; border: 1px solid #ffe082; line-height: 1.6; }
-        .edit-tabela { display: none; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 8px; }
+        .btn-edit { background: #eee; border: none; color: #555; font-size: 10px; padding: 5px 10px; border-radius: 4px; margin-top: 5px; font-weight: bold; }
         
-        .resumo-box { margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; display: none; background: #fff; }
-        .resumo-header { background: #f4f4f4; padding: 10px; font-weight: bold; text-align: center; border-bottom: 1px solid #ddd; }
-        .resumo-body { padding: 12px; }
-        .item-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #eee; font-size: 12px; }
-        .total-destaque { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 10px; color: var(--primary); }
-        .financeiro { margin-top: 12px; background: #f0f4f0; padding: 10px; border-radius: 6px; border-left: 4px solid var(--success); }
+        .tabela-v { background: #fffdf0; padding: 8px; border-radius: 6px; font-size: 11px; border: 1px solid #ffe082; line-height: 1.4; }
+        .edit-tabela { display: none; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 8px; }
+        .edit-tabela input { padding: 5px; font-size: 12px; text-align: center; }
+
+        /* Animação suave para o resultado não dar tranco */
+        .resumo-box { 
+            margin-top: 15px; border: 1px solid #ddd; border-radius: 8px; display: none; background: #fff;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .resumo-header { background: #f8f8f8; padding: 8px; font-weight: bold; text-align: center; border-bottom: 1px solid #ddd; font-size: 13px; }
+        .resumo-body { padding: 10px; }
+        .item-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #eee; font-size: 11px; }
+        
+        .total-destaque { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 8px; color: var(--primary); }
+        
+        .financeiro { margin-top: 10px; background: #f1f8f1; padding: 10px; border-radius: 8px; border-left: 4px solid var(--success); }
     </style>
 </head>
 <body>
@@ -41,18 +65,17 @@
 
     <div class="section-title">Valores Base</div>
     <div class="card-config">
-        <div><label>Valor Hora (R$):</label><input type="number" id="baseHora" value="100"></div>
-        <div><label>Valor Vídeo (R$):</label><input type="number" id="baseVideo" value="50"></div>
-        <div class="full"><label>Valor KM (R$):</label><input type="number" id="baseKm" value="1.50"></div>
+        <div><label>Valor Hora:</label><input type="number" id="baseHora" value="100"></div>
+        <div><label>Valor Vídeo:</label><input type="number" id="baseVideo" value="50"></div>
+        <div class="full"><label>Valor KM:</label><input type="number" id="baseKm" value="1.50"></div>
         
         <div class="full">
             <div class="tabela-v" id="viewTabela">
-                📍 0-10 fotos: R$ <span id="v1">12</span>/un<br>
-                📍 11-20 fotos: R$ <span id="v2">8</span>/un<br>
-                📍 21-40 fotos: R$ <span id="v3">6</span>/un<br>
-                📍 + de 40 fotos: R$ <span id="v4">4</span>/un
+                <strong>TABELA DE FOTOS:</strong><br>
+                • 0-10: R$ <span id="v1">12</span> | • 11-20: R$ <span id="v2">8</span><br>
+                • 21-40: R$ <span id="v3">6</span> | • + de 40: R$ <span id="v4">4</span>
             </div>
-            <button class="btn-edit" onclick="toggleEdit()">✏️ Alterar Valores da Tabela</button>
+            <button class="btn-edit" onclick="toggleEdit()">✏️ Editar Tabela</button>
             <div class="edit-tabela" id="editCampos">
                 <input type="number" id="f1" value="12"> <input type="number" id="f2" value="8">
                 <input type="number" id="f3" value="6"> <input type="number" id="f4" value="4">
@@ -67,21 +90,21 @@
         <div><label>Qtd Fotos:</label><input type="number" id="fotos" value="10"></div>
         <div><label>Qtd Vídeos:</label><input type="number" id="videos" value="0"></div>
         <div><label>KM Distância:</label><input type="number" id="km" value="0"></div>
-        <div><label>Custos Extras (R$):</label><input type="number" id="custos" value="0"></div>
+        <div class="full"><label>Custos Extras (R$):</label><input type="number" id="custos" value="0"></div>
     </div>
 
-    <button class="btn btn-calc" onclick="calcular()">Calcular Agora</button>
+    <button class="btn btn-calc" onclick="calcular()">Calcular Proposta</button>
 
     <div class="resumo-box" id="resultado">
-        <div class="resumo-header">ORÇAMENTO GERADO</div>
+        <div class="resumo-header">RESUMO DO ORÇAMENTO</div>
         <div class="resumo-body">
             <div class="total-destaque" id="outTotal">R$ 0,00</div>
             <div id="detalhes"></div>
             
             <div class="financeiro">
-                <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:red"></span></div>
+                <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:#d32f2f"></span></div>
                 <div class="item-row"><span>Caixa Empresa (40%):</span><span id="outCaixa"></span></div>
-                <div class="item-row" style="border:none;"><strong>SALÁRIO LÍQUIDO:</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
+                <div class="item-row" style="border:none; margin-top:5px; font-size:13px;"><strong>SALÁRIO:</strong><strong id="outSalario" style="color:var(--success)"></strong></div>
             </div>
 
             <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
@@ -98,13 +121,11 @@
     }
 
     function calcular() {
-        // Pega valores da tabela editável
         const p1 = parseFloat(document.getElementById('f1').value);
         const p2 = parseFloat(document.getElementById('f2').value);
         const p3 = parseFloat(document.getElementById('f3').value);
         const p4 = parseFloat(document.getElementById('f4').value);
         
-        // Atualiza visual da tabela
         document.getElementById('v1').innerText = p1; document.getElementById('v2').innerText = p2;
         document.getElementById('v3').innerText = p3; document.getElementById('v4').innerText = p4;
 
@@ -126,24 +147,28 @@
         else precoUn = p4;
 
         const totalFotos = f * precoUn;
-        const totalLogistica = (k * pkm) + c; // KM + Extras juntos
+        const totalLogistica = (k * pkm) + c;
         const totalGeral = (h * ph) + totalFotos + (v * pv) + totalLogistica;
         
         dados = { cli, h, f, v, totalGeral, totalLogistica, precoUn, totalFotos };
 
-        document.getElementById('resultado').style.display = 'block';
+        const resBox = document.getElementById('resultado');
+        resBox.style.display = 'block';
         document.getElementById('btnWa').style.display = 'block';
         document.getElementById('outTotal').innerText = totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         
         let lista = `<div class="item-row"><span>Mão de obra (${h}h)</span><span>R$ ${(h*ph).toFixed(2)}</span></div>`;
-        lista += `<div class="item-row"><span>Fotos (${f} un x R$ ${precoUn})</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
+        lista += `<div class="item-row"><span>Fotos (${f}un x R$ ${precoUn})</span><span>R$ ${totalFotos.toFixed(2)}</span></div>`;
         if(v > 0) lista += `<div class="item-row"><span>Vídeo (${v}un)</span><span>R$ ${(v*pv).toFixed(2)}</span></div>`;
-        if(totalLogistica > 0) lista += `<div class="item-row"><span>Logística (KM+Extras)</span><span>R$ ${totalLogistica.toFixed(2)}</span></div>`;
+        if(totalLogistica > 0) lista += `<div class="item-row"><span>Logística/Frete</span><span>R$ ${totalLogistica.toFixed(2)}</span></div>`;
         
         document.getElementById('detalhes').innerHTML = lista;
         document.getElementById('outDizimo').innerText = (totalGeral * 0.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         document.getElementById('outCaixa').innerText = (totalGeral * 0.4).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         document.getElementById('outSalario').innerText = (totalGeral * 0.5).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        // Faz o scroll suave até o resultado
+        resBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function enviarWhatsApp() {
@@ -159,7 +184,7 @@
         
         msg += `💰 *Investimento:*\n`;
         msg += `* Trabalho Fotográfico: ${(dados.totalGeral - dados.totalLogistica).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n`;
-        if(dados.totalLogistica > 0) msg += `* 🚚 Deslocamento / Custos Logísticos: ${logFmt}\n`;
+        if(dados.totalLogistica > 0) msg += `* 🚚 Deslocamento: ${logFmt}\n`;
         msg += `* *TOTAL FINAL: ${totalFmt}*\n\n`;
         
         msg += `*Pagamento:* Pix ou cartão (taxas por conta do cliente).\n\n`;
