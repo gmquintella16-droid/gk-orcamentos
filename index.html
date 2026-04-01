@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GK Fotografia e Filmes - Orçamentos</title>
+    <style>
+        :root {
+            --primary: #111;
+            --accent: #b8860b; 
+            --success: #1b5e20;
+            --whatsapp: #25d366;
+            --bg: #eceff1;
+        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg); padding: 15px; color: #222; }
+        .container { max-width: 600px; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); margin: auto; }
+        
+        .header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 20px; }
+        .header h1 { margin: 0; font-size: 22px; color: var(--primary); }
+        .header p { margin: 2px 0 0; font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 2px; }
+
+        .section-title { font-size: 12px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin: 20px 0 10px; border-left: 3px solid var(--accent); padding-left: 8px; }
+        
+        .card-config { background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .full { grid-column: span 2; }
+        
+        label { display: block; font-size: 11px; font-weight: 700; color: #555; margin-bottom: 4px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
+        
+        .btn { width: 100%; padding: 14px; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 15px; display: block; text-align: center; text-decoration: none; }
+        .btn-calc { background-color: var(--primary); }
+        .btn-wa { background-color: var(--whatsapp); display: none; margin-top: 20px; }
+
+        .resumo-box { margin-top: 25px; border: 1px solid #ddd; border-radius: 8px; display: none; }
+        .resumo-header { background: #f4f4f4; padding: 12px; font-weight: bold; text-align: center; border-bottom: 1px solid #ddd; }
+        .resumo-body { padding: 15px; }
+        .item-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
+        
+        .financeiro { margin-top: 15px; background: #f0f4f0; padding: 12px; border-radius: 6px; border-left: 4px solid var(--success); }
+        .total-destaque { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 12px; }
+        .lucro-texto { color: var(--success); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>GK FOTOGRAFIA E FILMES</h1>
+        <p>Eternizando Momentos</p>
+    </div>
+
+    <div class="section-title">Ajuste de Valores Base</div>
+    <div class="card-config">
+        <div><label>Hora Trabalho (R$):</label><input type="number" id="baseHora" value="200"></div>
+        <div><label>Cada Foto (R$):</label><input type="number" id="baseFoto" value="15"></div>
+        <div><label>Cada Vídeo (R$):</label><input type="number" id="baseVideo" value="150"></div>
+        <div><label>Valor KM (R$):</label><input type="number" id="baseKm" value="1.50"></div>
+    </div>
+
+    <div class="section-title">Dados do Cliente</div>
+    <div class="grid-inputs">
+        <div class="full"><label>Nome do Cliente:</label><input type="text" id="cliente" placeholder="Ex: Maria"></div>
+        <div><label>Horas:</label><input type="number" id="horas" value="1"></div>
+        <div><label>Fotos:</label><input type="number" id="fotos" value="0"></div>
+        <div><label>Vídeos:</label><input type="number" id="videos" value="0"></div>
+        <div><label>Distância (KM):</label><input type="number" id="km" value="0"></div>
+        <div class="full"><label>Custos Extras (Estúdio):</label><input type="number" id="custos" value="0"></div>
+    </div>
+
+    <button class="btn btn-calc" onclick="calcularOrcamento()">Calcular Agora</button>
+
+    <div class="resumo-box" id="resultado">
+        <div class="resumo-header">RESUMO GK FOTOGRAFIA E FILMES</div>
+        <div class="resumo-body">
+            <div class="total-destaque" id="outTotal">R$ 0,00</div>
+            <div id="detalhes"></div>
+            <div class="financeiro">
+                <div class="item-row"><span>Dízimo (10%):</span><span id="outDizimo" style="color:red"></span></div>
+                <div class="item-row"><span>Caixa Empresa (40%):</span><span id="outCaixa"></span></div>
+                <div class="item-row" style="border:none;">
+                    <span class="lucro-texto">SALÁRIO LÍQUIDO:</span>
+                    <span id="outSalario" class="lucro-texto"></span>
+                </div>
+            </div>
+            <button class="btn btn-wa" id="btnWa" onclick="enviarWhatsApp()">Enviar WhatsApp</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let dadosEnsaio = {};
+
+    function calcularOrcamento() {
+        const p_hora = parseFloat(document.getElementById('baseHora').value) || 0;
+        const p_foto = parseFloat(document.getElementById('baseFoto').value) || 0;
+        const p_video = parseFloat(document.getElementById('baseVideo').value) || 0;
+        const p_km = parseFloat(document.getElementById('baseKm').value) || 0;
+
+        const cliente = document.getElementById('cliente').value || "Cliente";
+        const h = parseFloat(document.getElementById('horas').value) || 0;
+        const f = parseFloat(document.getElementById('fotos').value) || 0;
+        const v = parseFloat(document.getElementById('videos').value) || 0;
+        const k = parseFloat(document.getElementById('km').value) || 0;
+        const c = parseFloat(document.getElementById('custos').value) || 0;
+
+        const total = (h * p_hora) + (f * p_foto) + (v * p_video) + (k * p_km) + c;
+
+        dadosEnsaio = { cliente, h, f, v, total };
+
+        document.getElementById('resultado').style.display = 'block';
+        document.getElementById('btnWa').style.display = 'block';
+        document.getElementById('outTotal').innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        let lista = "";
+        if(h > 0) lista += `<div class="item-row"><span>Sessão (${h}h)</span><span>R$ ${(h*p_hora).toFixed(2)}</span></div>`;
+        if(f > 0) lista += `<div class="item-row"><span>Fotos (${f}un)</span><span>R$ ${(f*p_foto).toFixed(2)}</span></div>`;
+        if(v > 0) lista += `<div class="item-row"><span>Vídeos (${v}un)</span><span>R$ ${(v*p_video).toFixed(2)}</span></div>`;
+        
+        document.getElementById('detalhes').innerHTML = lista;
+        document.getElementById('outDizimo').innerText = (total * 0.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outCaixa').innerText = (total * 0.4).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        document.getElementById('outSalario').innerText = (total * 0.5).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function enviarWhatsApp() {
+        const valorTotal = dadosEnsaio.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        let itens = "";
+        if(dadosEnsaio.h > 0) itens += "📸 Sessão dirigida de " + dadosEnsaio.h + "h\n";
+        if(dadosEnsaio.f > 0) itens += "🖼️ " + dadosEnsaio.f + " fotos editadas (Alta Resolução)\n";
+        if(dadosEnsaio.v > 0) itens += "🎬 " + dadosEnsaio.v + " vídeo(s) para Redes Sociais\n";
+
+        let msg = "Olá! 📸 É um prazer falar com você.\n\n";
+        msg += "Conforme conversamos, preparei o orçamento para o projeto: *" + dadosEnsaio.cliente + "*.\n\n";
+        msg += "*O que está incluso:*\n" + itens;
+        msg += "✅ Entrega 100% Digital\n";
+        msg += "✅ Olhar e edição profissional\n\n";
+        msg += "*Investimento Total:* " + valorTotal + "\n\n";
+        msg += "Fico à disposição para qualquer dúvida. Vamos eternizar esses momentos? ✨\n\n";
+        msg += "*GK Fotografia e Filmes*";
+
+        window.open("https://wa.me/?text=" + encodeURIComponent(msg), '_blank');
+    }
+</script>
+</body>
+</html>
